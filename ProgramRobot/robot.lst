@@ -1,0 +1,117 @@
+   1               		.file	"robot.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               	.global	main
+  18               	main:
+  19               	.LFB6:
+  20               	.LM1:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	.LM2:
+  24 0000 B99A      		sbi 55-32,1
+  25               	.LM3:
+  26 0002 BA9A      		sbi 55-32,2
+  27               	.LM4:
+  28 0004 8C9A      		sbi 49-32,4
+  29               	.LM5:
+  30 0006 8D9A      		sbi 49-32,5
+  31               	.LM6:
+  32 0008 8E9A      		sbi 49-32,6
+  33               	.LM7:
+  34 000a 8F9A      		sbi 49-32,7
+  35               	.LM8:
+  36 000c 889A      		sbi 49-32,0
+  37               	.LM9:
+  38 000e 899A      		sbi 49-32,1
+  39               	.LM10:
+  40 0010 8A9A      		sbi 49-32,2
+  41               	.LM11:
+  42 0012 A098      		cbi 52-32,0
+  43               	.LM12:
+  44 0014 A198      		cbi 52-32,1
+  45               	.LM13:
+  46 0016 A298      		cbi 52-32,2
+  47               	.LM14:
+  48 0018 A398      		cbi 52-32,3
+  49               	.LM15:
+  50 001a A498      		cbi 52-32,4
+  51               	.LM16:
+  52 001c A598      		cbi 52-32,5
+  53               	.LM17:
+  54 001e 8B98      		cbi 49-32,3
+  55               	.LM18:
+  56 0020 949A      		sbi 50-32,4
+  57               	.LM19:
+  58 0022 9598      		cbi 50-32,5
+  59               	.LM20:
+  60 0024 969A      		sbi 50-32,6
+  61               	.LM21:
+  62 0026 9798      		cbi 50-32,7
+  63               	.LM22:
+  64 0028 8FE8      		ldi r24,lo8(399)
+  65 002a 91E0      		ldi r25,hi8(399)
+  66 002c 97BD      		out (70)+1-32,r25
+  67 002e 86BD      		out 70-32,r24
+  68               	.LM23:
+  69 0030 8CE2      		ldi r24,lo8(300)
+  70 0032 91E0      		ldi r25,hi8(300)
+  71 0034 9BBD      		out (74)+1-32,r25
+  72 0036 8ABD      		out 74-32,r24
+  73               	.LM24:
+  74 0038 99BD      		out (72)+1-32,r25
+  75 003a 88BD      		out 72-32,r24
+  76               	.LM25:
+  77 003c 82EA      		ldi r24,lo8(-94)
+  78 003e 8FBD      		out 79-32,r24
+  79               	.LM26:
+  80 0040 81E1      		ldi r24,lo8(17)
+  81 0042 8EBD      		out 78-32,r24
+  82               	.L9:
+  83               	.LM27:
+  84 0044 8399      		sbic 48-32,3
+  85 0046 00C0      		rjmp .L2
+  86               	.LM28:
+  87 0048 909A      		sbi 50-32,0
+  88 004a 00C0      		rjmp .L3
+  89               	.L2:
+  90               	.LM29:
+  91 004c 9098      		cbi 50-32,0
+  92               	.L3:
+  93               	.LM30:
+  94 004e 9899      		sbic 51-32,0
+  95 0050 00C0      		rjmp .L4
+  96               	.LM31:
+  97 0052 919A      		sbi 50-32,1
+  98 0054 00C0      		rjmp .L5
+  99               	.L4:
+ 100               	.LM32:
+ 101 0056 9198      		cbi 50-32,1
+ 102               	.L5:
+ 103               	.LM33:
+ 104 0058 9999      		sbic 51-32,1
+ 105 005a 00C0      		rjmp .L6
+ 106               	.LM34:
+ 107 005c 929A      		sbi 50-32,2
+ 108 005e 00C0      		rjmp .L9
+ 109               	.L6:
+ 110               	.LM35:
+ 111 0060 9298      		cbi 50-32,2
+ 112 0062 00C0      		rjmp .L9
+ 113               	.LFE6:
+ 139               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 robot.c
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:2      *ABS*:0000003f __SREG__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:3      *ABS*:0000003e __SP_H__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:4      *ABS*:0000003d __SP_L__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:5      *ABS*:00000034 __CCP__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\SEBAST~1\AppData\Local\Temp/cc8ZDsKT.s:18     .text:00000000 main
+
+NO UNDEFINED SYMBOLS
