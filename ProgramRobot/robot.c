@@ -21,15 +21,17 @@ int main (void)
 		//input
 		
 		DDRC &=~(1<<0);	//C1
+		/*
 		DDRC &=~(1<<1);	//C2
 		DDRC &=~(1<<2);	//C3
 		DDRC &=~(1<<3);	//C4
 		DDRC &=~(1<<4);	//C5
 		DDRC &=~(1<<5);	//C6
-		DDRD &=~(1<<3);	//C7
+		DDRD &=~(1<<3);	//C7*/
 		
 		//direction constant
 		
+		//magic
 		PORTD |=(1<<4);		//DIR A1
 		PORTD &=~(1<<5);		//DIR A2
 		PORTD |=(1<<6);		//DIR B1
@@ -48,20 +50,48 @@ int main (void)
 		
 		while(1)
 		{
-		/*
-			for(i=0;i<=399;i++)
+			for(i=0;i<=100;i++)
 			 {
 			   OCR1A=i;
 			   OCR1B=399-i;  
 			   _delay_ms(10);
 			 }
+			 
+			 PORTD |=(1<<0);
+			 
+			 for(i=100;i<=200;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 
+			 PORTD |=(1<<1); 
+			 
+			 for(i=200;i<=300;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 
+			 PORTD |=(1<<2);
+			 
+			 for(i=300;i<=399;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 
+		/*	 
 			for(i=399;i>=0;i--)
 			 {
 			   OCR1A=i;
 			   OCR1B=399-i;  
 			   _delay_ms(10);
 			 }
-		*/
+		
 			if (!(PIND & (1<<3)))
 			{
 				PORTD |=(1<<0);
@@ -88,7 +118,7 @@ int main (void)
 			{
 				PORTD &=~(1<<2);
 			}
-
+*/
 
 		}
 	}
