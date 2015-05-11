@@ -56,43 +56,43 @@ int main (void)
 			rightRotor = 300; 
 			
 			//trans7
-			if (!(PIND & (1<<3)))
+			if ((PIND & (1<<3)))
 			{
 				leftRotor -= 250; 
 			}
 			
 			//trans6
-			if (!(PINC & (1<<5)))
+			if ((PINC & (1<<5)))
 			{
 				leftRotor -= 150; 
 			}
 			
 			//trans5
-			if (!(PINC & (1<<4)))
+			if ((PINC & (1<<4)))
 			{
 				leftRotor -= 50; 
 			}
 			
 			//trans4
-			if (!(PINC & (1<<3)))
+			if ((PINC & (1<<3)))
 			{
 				//do nothing
 			}
 			
 			//trans3
-			if (!(PINC & (1<<2)))
+			if ((PINC & (1<<2)))
 			{
 				rightRotor -= 50;
 			}
 			
 			//trans2
-			if (!(PINC & (1<<1)))
+			if ((PINC & (1<<1)))
 			{
 				rightRotor -= 150;
 			}
 			
 			//trans1
-			if (!(PINC & (1<<0)))
+			if ((PINC & (1<<0)))
 			{
 				rightRotor -= 250;
 			}
@@ -103,8 +103,8 @@ int main (void)
 			if (leftRotor < 0)
 				leftRotor = 0;
 			
-			OCR1A = leftRotor;
-			OCR1B = rightRotor;
+			OCR1A = rightRotor;
+			OCR1B = leftRotor;
 			
 			/*
 			for(i=0;i<=100;i++)
