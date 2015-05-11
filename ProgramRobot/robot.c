@@ -52,25 +52,27 @@ int main (void)
 		
 		while(1)
 		{
+			//200 is min 
+			
 			leftRotor = 250;
-			rightRotor = 300; 
+			rightRotor = 250 + 50; //50 due to shitty engine
 			
 			//trans7
 			if ((PIND & (1<<3)))
 			{
-				leftRotor -= 250; 
+				leftRotor -= 50; 
 			}
 			
 			//trans6
 			if ((PINC & (1<<5)))
 			{
-				leftRotor -= 150; 
+				leftRotor -= 20; 
 			}
 			
 			//trans5
 			if ((PINC & (1<<4)))
 			{
-				leftRotor -= 50; 
+				leftRotor -= 10; 
 			}
 			
 			//trans4
@@ -82,19 +84,19 @@ int main (void)
 			//trans3
 			if ((PINC & (1<<2)))
 			{
-				rightRotor -= 50;
+				rightRotor -= 10;
 			}
 			
 			//trans2
 			if ((PINC & (1<<1)))
 			{
-				rightRotor -= 150;
+				rightRotor -= 20;
 			}
 			
 			//trans1
 			if ((PINC & (1<<0)))
 			{
-				rightRotor -= 250;
+				rightRotor -= 50;
 			}
 			
 			if (rightRotor < 0)
