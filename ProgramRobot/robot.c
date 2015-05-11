@@ -21,13 +21,12 @@ int main (void)
 		//input
 		
 		DDRC &=~(1<<0);	//C1
-		/*
 		DDRC &=~(1<<1);	//C2
 		DDRC &=~(1<<2);	//C3
 		DDRC &=~(1<<3);	//C4
 		DDRC &=~(1<<4);	//C5
 		DDRC &=~(1<<5);	//C6
-		DDRD &=~(1<<3);	//C7*/
+		DDRD &=~(1<<3);	//C7
 		
 		//direction constant
 		
@@ -48,8 +47,66 @@ int main (void)
 				
 		int i; //iterator
 		
+		int leftRotor;
+		int rightRotor;
+		
 		while(1)
 		{
+			leftRotor = 250;
+			rightRotor = 300; 
+			
+			//trans7
+			if (!(PIND & (1<<3)))
+			{
+				leftRotor -= 250; 
+			}
+			
+			//trans6
+			if (!(PINC & (1<<5)))
+			{
+				leftRotor -= 150; 
+			}
+			
+			//trans5
+			if (!(PINC & (1<<4)))
+			{
+				leftRotor -= 50; 
+			}
+			
+			//trans4
+			if (!(PINC & (1<<3)))
+			{
+				//do nothing
+			}
+			
+			//trans3
+			if (!(PINC & (1<<2)))
+			{
+				rightRotor -= 50;
+			}
+			
+			//trans2
+			if (!(PINC & (1<<1)))
+			{
+				rightRotor -= 150;
+			}
+			
+			//trans1
+			if (!(PINC & (1<<0)))
+			{
+				rightRotor -= 250;
+			}
+			
+			if (rightRotor < 0)
+				rightRotor = 0;
+			
+			if (leftRotor < 0)
+				leftRotor = 0;
+			
+			OCR1A = leftRotor;
+			OCR1B = rightRotor;
+			
+			/*
 			for(i=0;i<=100;i++)
 			 {
 			   OCR1A=i;
@@ -83,6 +140,8 @@ int main (void)
 			   OCR1B=399-i;  
 			   _delay_ms(10);
 			 }
+			 */
+			 
 			 
 		/*	 
 			for(i=399;i>=0;i--)
@@ -119,6 +178,5 @@ int main (void)
 				PORTD &=~(1<<2);
 			}
 */
-
 		}
 	}
