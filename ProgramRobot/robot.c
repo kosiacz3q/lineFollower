@@ -30,6 +30,7 @@ int main (void)
 		
 		//direction constant
 		
+		//magic
 		PORTD |=(1<<4);		//DIR A1
 		PORTD &=~(1<<5);		//DIR A2
 		PORTD |=(1<<6);		//DIR B1
@@ -46,22 +47,112 @@ int main (void)
 				
 		int i; //iterator
 		
+		int leftRotor;
+		int rightRotor;
+		
 		while(1)
 		{
-		/*
-			for(i=0;i<=399;i++)
+			//200 is min 
+			
+			leftRotor = 250;
+			rightRotor = 250 + 50; //50 due to shitty engine
+			
+			//trans7
+			if ((PIND & (1<<3)))
+			{
+				leftRotor -= 50; 
+			}
+			
+			//trans6
+			if ((PINC & (1<<5)))
+			{
+				leftRotor -= 20; 
+			}
+			
+			//trans5
+			if ((PINC & (1<<4)))
+			{
+				leftRotor -= 10; 
+			}
+			
+			//trans4
+			if ((PINC & (1<<3)))
+			{
+				//do nothing
+			}
+			
+			//trans3
+			if ((PINC & (1<<2)))
+			{
+				rightRotor -= 10;
+			}
+			
+			//trans2
+			if ((PINC & (1<<1)))
+			{
+				rightRotor -= 20;
+			}
+			
+			//trans1
+			if ((PINC & (1<<0)))
+			{
+				rightRotor -= 50;
+			}
+			
+			if (rightRotor < 0)
+				rightRotor = 0;
+			
+			if (leftRotor < 0)
+				leftRotor = 0;
+			
+			OCR1A = rightRotor;
+			OCR1B = leftRotor;
+			
+			/*
+			for(i=0;i<=100;i++)
 			 {
 			   OCR1A=i;
 			   OCR1B=399-i;  
 			   _delay_ms(10);
 			 }
+			 
+			 PORTD |=(1<<0);
+			 
+			 for(i=100;i<=200;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 
+			 PORTD |=(1<<1); 
+			 
+			 for(i=200;i<=300;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 
+			 PORTD |=(1<<2);
+			 
+			 for(i=300;i<=399;i++)
+			 {
+			   OCR1A=i;
+			   OCR1B=399-i;  
+			   _delay_ms(10);
+			 }
+			 */
+			 
+			 
+		/*	 
 			for(i=399;i>=0;i--)
 			 {
 			   OCR1A=i;
 			   OCR1B=399-i;  
 			   _delay_ms(10);
 			 }
-		*/
+		
 			if (!(PIND & (1<<3)))
 			{
 				PORTD |=(1<<0);
@@ -88,7 +179,6 @@ int main (void)
 			{
 				PORTD &=~(1<<2);
 			}
-
-
+*/
 		}
 	}
