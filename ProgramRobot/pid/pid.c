@@ -1,3 +1,4 @@
+
 #include<avr/io.h>
 #include<util/delay.h>
 //Define WHITE if the robot is supposed to follow the white line.
@@ -6,7 +7,7 @@
 
 /*
  * Sets all SFRs.
- */
+*/
 void initialize(void);
 
 /*
@@ -14,19 +15,19 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
-char k[7] = {-5, -2, -1, 0, 1, 2, 5};
-char kP = 20;
-char kD = 0;
-char kI = 0;
-
-void diodDiagnose(void);
+int k[7] = {-50, -25, -18, 0, 18, 25, 50};
+int kP = 30;
+int kD = 10;
+int kI = 20;
+// last working 16 10 15
+void diodesDiagnose(void);
 
 inline int max(int a, int b){ return a>b?a:b;}
 inline int min(int a, int b){ return a>b?b:a;}
-
+int round(float number){ return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);}
 /**
  * Changes the speed of the motor.
- * Value is between 0 and 100 (100 is a max speed)
+ * Value is between 0 and 1000 (1000 is a max speed)
  *
  */
 void setLeftMotorPwm(int value);
@@ -64,37 +65,38 @@ int main(void)
 	int current_read = getDifference();
 	int previous_read;
 
-	int diffPart = 0;
+	float diffPart = 0;
 	int intPart = 0;
 	int propPart = 0;
 	int steeringPart = 0;
 
+
 	while(1)
 	{
 
-
 		readSensors();
-		diodDiagnose();
+		diodesDiagnose();
 		previous_read = current_read;
 		current_read = getDifference();
 
-		diffPart = (current_read - previous_read) * kD;
+		diffPart = diffPart/1.05 + (current_read - previous_read) * kD;
 		intPart += current_read * kI;
+		intPart = (intPart<-1000)?(-1000):((intPart>1000)?1000:intPart);
 		propPart = current_read * kP;
-		steeringPart = diffPart + intPart + propPart;
-		steeringPart = 0;
+		steeringPart = round(diffPart) + intPart + propPart;
 		if(steeringPart > 0)
 		{
-			setRightMotorPwm(100 - steeringPart);
-			setLeftMotorPwm(100);
+			setRightMotorPwm(1000 - steeringPart);
+			setLeftMotorPwm(1000);
 
 		}
 		else
 		{
-			setRightMotorPwm(100);
-			setLeftMotorPwm(100 + steeringPart);
+			setRightMotorPwm(1000);
+			setLeftMotorPwm(1000 + steeringPart);
 
 		}
+
 
 
 	}
@@ -135,9 +137,12 @@ void initialize(){
 		//OCR1A = 300;
 		//OCR1B = 300;
 
-		//FastPwm 8 bit
-		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<COM1A0)|(1<<COM1B0) << (1<<WGM10);
-		TCCR1B=(1<WGM12)|(1<<CS11);
+//		//FastPwm 8 bit
+//		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<COM1A0)|(1<<COM1B0) | (1<<WGM10);
+//		TCCR1B=(1<WGM12)|(1<<CS11);
+//
+		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);
+		TCCR1B=(1<<WGM13)|(1<WGM12)|(1<<CS10);
 }
 
 /**
@@ -163,15 +168,19 @@ void readSensors(){
 void setLeftMotorPwm(int value){setMotorPwm(left, value);}
 void setRightMotorPwm(int value){setMotorPwm(right, value);}
 void setMotorPwm(enum motors which, int value){
-
+	// set maxes to 320 xD
+	//def lmin : 210 rmin 185 lrmax 320
+static const int lmin = 170;
+static const int lmax = 260;
+static const int rmin = 130;
+static const int rmax = 255;
 	switch(which){
 	case left:
-		//OCR1B = leftMinPwm + value*((float) (leftMaxPwm-leftMinPwm))/100;
-		OCR1B = min(max(2 * value + 50, 0), 255);
+// min: 215
+		OCR1B = max(min(lmin + round(value*((float)lmax-lmin)/1000), lmax),lmin);
 		break;
 	case right:
-		OCR1A = min(max(2 * value + 50, 0), 255);
-		//OCR1A = rightMinPwm + value*((float)(rightMaxPwm-rightMinPwm))/100;
+		OCR1A = max(min(rmin + round(value*((float)rmax-rmin)/1000), rmax),rmin);
 		break;
 
 	}
