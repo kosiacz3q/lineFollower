@@ -78,7 +78,6 @@ int main(void)
 		diodesDiagnose();
 		previous_read = current_read;
 		current_read = getDifference();
-
 		diffPart = diffPart/1.05 + (current_read - previous_read) * kD;
 		intPart += current_read * kI;
 		intPart = (intPart<-1000)?(-1000):((intPart>1000)?1000:intPart);
