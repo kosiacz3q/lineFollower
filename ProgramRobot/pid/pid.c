@@ -15,7 +15,7 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
-int k[7] = {-50, -25, -18, 0, 18, 25, 50};
+int k[7] = {-50, -18, -8, 0, 8, 18, 50};
 int kP = 30;
 int kD = 10;
 int kI = 20;
