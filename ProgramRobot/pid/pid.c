@@ -1,9 +1,7 @@
-
 #include<avr/io.h>
 #include<util/delay.h>
 //Define WHITE if the robot is supposed to follow the white line.
 //#define WHITE
-
 
 /*
  * Sets all SFRs.
@@ -15,16 +13,20 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
+
 int k[7] = {-50, -25, -18, 0, 18, 25, 50};
 int kP = 30;
 int kD = 10;
 int kI = 20;
+
 // last working 16 10 15
 void diodesDiagnose(void);
 
 inline int max(int a, int b){ return a>b?a:b;}
 inline int min(int a, int b){ return a>b?b:a;}
+
 int round(float number){ return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);}
+
 /**
  * Changes the speed of the motor.
  * Value is between 0 and 1000 (1000 is a max speed)
@@ -32,10 +34,6 @@ int round(float number){ return (number >= 0) ? (int)(number + 0.5) : (int)(numb
  */
 void setLeftMotorPwm(int value);
 void setRightMotorPwm(int value);
-enum motors{left,right};
-void setMotorPwm(enum motors which, int value);
-
-
 
 /**
  * Global variable for storing the binary input from sensors.
@@ -53,11 +51,6 @@ void setMotorPwm(enum motors which, int value);
  */
 int sensors = 0;
 
-
-
-
-
-
 int main(void)
 {
 	initialize();
@@ -70,39 +63,37 @@ int main(void)
 	int propPart = 0;
 	int steeringPart = 0;
 
-
 	while(1)
 	{
-
 		readSensors();
 		diodesDiagnose();
+		
 		previous_read = current_read;
 		current_read = getDifference();
+		
 		diffPart = diffPart/1.05 + (current_read - previous_read) * kD;
+		
 		intPart += current_read * kI;
 		intPart = (intPart<-1000)?(-1000):((intPart>1000)?1000:intPart);
+		
 		propPart = current_read * kP;
 		steeringPart = round(diffPart) + intPart + propPart;
+		
 		if(steeringPart > 0)
 		{
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
-
 		}
 		else
 		{
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
-
 		}
-
-
-
 	}
 }
 
-
-void initialize(){
+void initialize()
+{
 	// Enable output pins
 		DDRB |=(1<<1); //PWM A
 		DDRB |=(1<<2); //PWM B
@@ -139,7 +130,7 @@ void initialize(){
 //		//FastPwm 8 bit
 //		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<COM1A0)|(1<<COM1B0) | (1<<WGM10);
 //		TCCR1B=(1<WGM12)|(1<<CS11);
-//
+
 		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);
 		TCCR1B=(1<<WGM13)|(1<WGM12)|(1<<CS10);
 }
@@ -155,34 +146,33 @@ void initialize(){
  * 2^1 - second most right
  * 2^0 - most right
  */
-void readSensors(){
+void readSensors()
+{
 	sensors = (PINC & 0b00111111);
 	if(PIND & 8) sensors |= 0b01000000;
 	#ifdef WHITE
 	sensors = ~(sensors & 0b01111111);
 	#endif
-
 }
 
-void setLeftMotorPwm(int value){setMotorPwm(left, value);}
-void setRightMotorPwm(int value){setMotorPwm(right, value);}
-void setMotorPwm(enum motors which, int value){
-	// set maxes to 320 xD
-	//def lmin : 210 rmin 185 lrmax 320
+// set maxes to 320 xD
+//def lmin : 210 rmin 185 lrmax 320
 static const int lmin = 170;
 static const int lmax = 260;
 static const int rmin = 130;
 static const int rmax = 255;
-	switch(which){
-	case left:
-// min: 215
-		OCR1B = max(min(lmin + round(value*((float)lmax-lmin)/1000), lmax),lmin);
-		break;
-	case right:
-		OCR1A = max(min(rmin + round(value*((float)rmax-rmin)/1000), rmax),rmin);
-		break;
+static const int maxSpeed = 1000;
 
-	}
+void setLeftMotorPwm(int value)
+{
+	//OCR1B = max(min(lmin + round(value*((float)lmax-lmin)/1000), lmax),lmin);
+	OCR1B = lmin + (int)(value * ((float)lmax-lmin) / maxSpeed);
+}
+
+void setRightMotorPwm(int value)
+{
+	//OCR1A = max(min(rmin + round(value*((float)rmax-rmin)/1000), rmax),rmin);
+	OCR1A = rmin + (int)(value * ((float)rmax-rmin) / maxSpeed);
 }
 
 /**
@@ -193,14 +183,16 @@ static const int rmax = 255;
  * If more than one sensor is above the line the return value is sum of those k's.
  *
  */
-int getDifference(){
+int getDifference()
+{
 	int toReturn = 0;
 	for(int i = 0; i<7; i++)
 		toReturn += (sensors & (1<<( 6- i)))?k[i]:0;
 	return toReturn;
 }
 
-void diodesDiagnose(void){
+void diodesDiagnose(void)
+{
 	// light the middle diode if middle sensor is above the line
 	if((sensors & (1<<3)) > 0)
 		PORTD |= 2;
@@ -216,7 +208,6 @@ void diodesDiagnose(void){
 		PORTD |= 4;
 	else
 		PORTD &= ~(4);
-
 }
 
 
