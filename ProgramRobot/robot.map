@@ -1,7 +1,7 @@
 Archive member included because of file (symbol)
 
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
-                              robot.o (__subsf3)
+                              robot.o (__addsf3)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o) (__addsf3x)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3.o)
@@ -28,14 +28,16 @@ c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_s
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o) (__fp_split3)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o) (__fp_zero)
-c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
-                              robot.o (__gesf2)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
                               robot.o (__mulsf3)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o) (__mulsf3x)
-c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
-                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o) (__fp_cmp)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+                              robot.o (round)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o) (__fp_mintl)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
+                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o) (__fp_mpack)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o (exit)
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
@@ -153,7 +155,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x7f4
+.text           0x00000000      0x738
  *(.vectors)
  .vectors       0x00000000       0x26 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
                 0x00000000                __vectors
@@ -228,108 +230,110 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
                 0x0000005c                __vector_10
                 0x0000005c                __vector_16
                 0x0000005c                __vector_18
- .text          0x0000005e      0x364 robot.o
-                0x000000fe                setMotorPwm
-                0x0000005e                round
-                0x000000de                readSensors
-                0x0000025e                diodesDiagnose
-                0x00000218                getDifference
-                0x00000208                setRightMotorPwm
-                0x00000282                main
-                0x00000210                setLeftMotorPwm
-                0x000000a4                initialize
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixsfsi.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_inf.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_nan.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscA.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscB.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
- .text          0x000003c2        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
-                0x000003c2                . = ALIGN (0x2)
+ .text          0x0000005e      0x266 robot.o
+                0x00000098                readSensors
+                0x0000015a                diodesDiagnose
+                0x00000114                getDifference
+                0x000000e6                setRightMotorPwm
+                0x0000017e                main
+                0x000000b8                setLeftMotorPwm
+                0x0000005e                initialize
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixsfsi.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_inf.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_nan.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscA.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscB.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
+ .text          0x000002c4        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
+                0x000002c4                . = ALIGN (0x2)
  *(.text.*)
  .text.avr-libc.fplib
-                0x000003c2        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
-                0x000003c2                __subsf3
-                0x000003c4                __addsf3
+                0x000002c4        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
+                0x000002c4                __subsf3
+                0x000002c6                __addsf3
  .text.avr-libc.fplib
-                0x000003cc       0xc0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
-                0x000003e6                __addsf3x
+                0x000002ce       0xc0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
+                0x000002e8                __addsf3x
  .text.avr-libc.fplib
-                0x0000048c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3.o)
-                0x0000048c                __divsf3
+                0x0000038e        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3.o)
+                0x0000038e                __divsf3
  .text.avr-libc.fplib
-                0x00000490       0xcc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
-                0x000004a6                __divsf3x
-                0x000004aa                __divsf3_pse
+                0x00000392       0xcc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
+                0x000003a8                __divsf3x
+                0x000003ac                __divsf3_pse
  .text.avr-libc.fplib
-                0x0000055c        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixsfsi.o)
-                0x0000055c                __fixsfsi
+                0x0000045e        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixsfsi.o)
+                0x0000045e                __fixsfsi
  .text.avr-libc.fplib
-                0x00000566       0x58 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
-                0x00000566                __fixunssfsi
+                0x00000468       0x58 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
+                0x00000468                __fixunssfsi
  .text.avr-libc.fplib
-                0x000005be       0x7a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
-                0x000005c2                __floatsisf
-                0x000005be                __floatunsisf
+                0x000004c0       0x7a c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
+                0x000004c4                __floatsisf
+                0x000004c0                __floatunsisf
  .text.avr-libc.fplib
-                0x00000638        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_inf.o)
-                0x00000638                __fp_inf
+                0x0000053a        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_inf.o)
+                0x0000053a                __fp_inf
  .text.avr-libc.fplib
-                0x00000644        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_nan.o)
-                0x00000644                __fp_nan
+                0x00000546        0x6 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_nan.o)
+                0x00000546                __fp_nan
  .text.avr-libc.fplib
-                0x0000064a        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscA.o)
-                0x0000064a                __fp_pscA
+                0x0000054c        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscA.o)
+                0x0000054c                __fp_pscA
  .text.avr-libc.fplib
-                0x00000658        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscB.o)
-                0x00000658                __fp_pscB
+                0x0000055a        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_pscB.o)
+                0x0000055a                __fp_pscB
  .text.avr-libc.fplib
-                0x00000666       0x22 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
-                0x00000666                __fp_round
+                0x00000568       0x22 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
+                0x00000568                __fp_round
  .text.avr-libc.fplib
-                0x00000688       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
-                0x00000688                __fp_split3
-                0x00000698                __fp_splitA
+                0x0000058a       0x44 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
+                0x0000058a                __fp_split3
+                0x0000059a                __fp_splitA
  .text.avr-libc.fplib
-                0x000006cc        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
-                0x000006cc                __fp_zero
-                0x000006ce                __fp_szero
+                0x000005ce        0xe c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
+                0x000005ce                __fp_zero
+                0x000005d0                __fp_szero
  .text.avr-libc.fplib
-                0x000006da        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
-                0x000006da                __gtsf2
-                0x000006da                __gesf2
+                0x000005dc        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
+                0x000005dc                __mulsf3
  .text.avr-libc.fplib
-                0x000006e2        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
-                0x000006e2                __mulsf3
+                0x000005e0       0xc2 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
+                0x000005f8                __mulsf3_pse
+                0x000005f4                __mulsf3x
  .text.avr-libc.fplib
-                0x000006e6       0xc2 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
-                0x000006fe                __mulsf3_pse
-                0x000006fa                __mulsf3x
+                0x000006a2       0x40 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+                0x000006a2                round
  .text.avr-libc.fplib
-                0x000007a8       0x48 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
-                0x000007a8                __fp_cmp
- .text.libgcc   0x000007f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
- .text.libgcc   0x000007f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
- .text.libgcc   0x000007f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
-                0x000007f0                . = ALIGN (0x2)
+                0x000006e2       0x36 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+                0x000006e2                __fp_mintl
+ .text.avr-libc.fplib
+                0x00000718       0x1c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
+                0x0000071c                __fp_mpack_finite
+                0x00000718                __fp_mpack
+ .text.libgcc   0x00000734        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
+ .text.libgcc   0x00000734        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000734        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
+                0x00000734                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000007f0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
-                0x000007f0                exit
-                0x000007f0                _exit
+ .fini9         0x00000734        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
+                0x00000734                exit
+                0x00000734                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -348,11 +352,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000007f0        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
+ .fini0         0x00000734        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
  *(.fini0)
-                0x000007f4                _etext = .
+                0x00000738                _etext = .
 
-.data           0x00800060       0x14 load address 0x000007f4
+.data           0x00800060       0x14 load address 0x00000738
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
@@ -375,10 +379,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
- .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
- .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
+ .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+ .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+ .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
  .data          0x00800074        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
@@ -410,18 +415,19 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_round.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
- .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
- .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
+ .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+ .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+ .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_exit.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_copy_data.o)
  .bss           0x00800076        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
                 0x00800076                PROVIDE (__bss_end, .)
-                0x000007f4                __data_load_start = LOADADDR (.data)
-                0x00000808                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000738                __data_load_start = LOADADDR (.data)
+                0x0000074c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800076        0x0
                 0x00800076                PROVIDE (__noinit_start, .)
@@ -485,36 +491,36 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr4\libgcc.a
                 0x00000000       0x20 robot.o
 
 .debug_pubnames
-                0x00000000       0xc9
+                0x00000000       0xaf
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000       0xc9 robot.o
+                0x00000000       0xaf robot.o
 
-.debug_info     0x00000000      0x320
+.debug_info     0x00000000      0x253
  *(.debug_info)
- .debug_info    0x00000000      0x320 robot.o
+ .debug_info    0x00000000      0x253 robot.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x188
+.debug_abbrev   0x00000000      0x121
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x188 robot.o
+ .debug_abbrev  0x00000000      0x121 robot.o
 
-.debug_line     0x00000000      0x2c0
+.debug_line     0x00000000      0x25e
  *(.debug_line)
- .debug_line    0x00000000      0x2c0 robot.o
+ .debug_line    0x00000000      0x25e robot.o
 
-.debug_frame    0x00000000       0xa0
+.debug_frame    0x00000000       0x80
  *(.debug_frame)
- .debug_frame   0x00000000       0xa0 robot.o
+ .debug_frame   0x00000000       0x80 robot.o
 
-.debug_str      0x00000000      0x16f
+.debug_str      0x00000000      0x13c
  *(.debug_str)
- .debug_str     0x00000000      0x16f robot.o
-                                0x1a3 (size before relaxing)
+ .debug_str     0x00000000      0x13c robot.o
+                                0x170 (size before relaxing)
 
-.debug_loc      0x00000000      0x1e9
+.debug_loc      0x00000000      0x100
  *(.debug_loc)
- .debug_loc     0x00000000      0x1e9 robot.o
+ .debug_loc     0x00000000      0x100 robot.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -550,12 +556,15 @@ __fixunssfsi                                      c:/winavr-20100110/bin/../lib/
 __floatsisf                                       c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
                                                   robot.o
 __floatunsisf                                     c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(floatsisf.o)
-__fp_cmp                                          c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_cmp.o)
-                                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
 __fp_inf                                          c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_inf.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
+__fp_mintl                                        c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mintl.o)
+                                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+__fp_mpack                                        c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
+                                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+__fp_mpack_finite                                 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_mpack.o)
 __fp_nan                                          c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_nan.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
@@ -577,17 +586,16 @@ __fp_split3                                       c:/winavr-20100110/bin/../lib/
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
 __fp_splitA                                       c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_split3.o)
+                                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
 __fp_szero                                        c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
+                                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3x.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixsfsi.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(divsf3x.o)
 __fp_zero                                         c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fp_zero.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(fixunssfsi.o)
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3x.o)
-__gesf2                                           c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
-                                                  robot.o
-__gtsf2                                           c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(gesf2.o)
 __heap_end                                        c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 __init                                            c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 __mulsf3                                          c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
@@ -597,7 +605,6 @@ __mulsf3x                                         c:/winavr-20100110/bin/../lib/
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(mulsf3.o)
 __stack                                           c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 __subsf3                                          c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(addsf3.o)
-                                                  robot.o
 __vector_1                                        c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 __vector_10                                       c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 __vector_11                                       c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
@@ -631,8 +638,8 @@ kP                                                robot.o
 main                                              robot.o
                                                   c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4/crtm8.o
 readSensors                                       robot.o
-round                                             robot.o
+round                                             c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr4\libm.a(round.o)
+                                                  robot.o
 sensors                                           robot.o
 setLeftMotorPwm                                   robot.o
-setMotorPwm                                       robot.o
 setRightMotorPwm                                  robot.o

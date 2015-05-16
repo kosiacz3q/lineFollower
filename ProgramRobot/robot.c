@@ -13,7 +13,7 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
-int k[7] = {-50, -18, -8, 0, 8, 18, 50};
+int k[7] = {-25, -5, -3, 0, 3, 5, 25};
 
 int kP = 30;
 int kD = 10;
@@ -22,10 +22,8 @@ int kI = 20;
 // last working 16 10 15
 void diodesDiagnose(void);
 
-inline int max(int a, int b){ return a>b?a:b;}
-inline int min(int a, int b){ return a>b?b:a;}
-
-int round(float number){ return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);}
+inline int max(int a, int b){ return a>b ? a:b;}
+inline int min(int a, int b){ return a>b ? b:a;}
 
 /**
  * Changes the speed of the motor.
@@ -71,10 +69,10 @@ int main(void)
 		previous_read = current_read;
 		current_read = getDifference();
 		
-		diffPart = diffPart/1.05 + (current_read - previous_read) * kD;
+		diffPart = diffPart / 1.05 + (current_read - previous_read) * kD;
 		
 		intPart += current_read * kI;
-		intPart = (intPart<-1000)?(-1000):((intPart>1000)?1000:intPart);
+		intPart = (intPart < -1000)  ?  (-1000) : ((intPart > 1000)  ?  1000 : intPart);
 		
 		propPart = current_read * kP;
 		steeringPart = round(diffPart) + intPart + propPart;
@@ -95,31 +93,31 @@ int main(void)
 void initialize()
 {
 	// Enable output pins
-		DDRB |=(1<<1); //PWM A
-		DDRB |=(1<<2); //PWM B
-		DDRD |=(1<<4); //DIR A1
-		DDRD |=(1<<5); //DIR A2
-		DDRD |=(1<<6); //DIR B1
-		DDRD |=(1<<7); //DIR B2
-		DDRD |=(1<<0); //Diode 0
-		DDRD |=(1<<1); //Diode 1
-		DDRD |=(1<<2); //Diode 2
+		DDRB |= (1 << 1); //PWM A
+		DDRB |= (1 << 2); //PWM B
+		DDRD |= (1 << 4); //DIR A1
+		DDRD |= (1 << 5); //DIR A2
+		DDRD |= (1 << 6); //DIR B1
+		DDRD |= (1 << 7); //DIR B2
+		DDRD |= (1 << 0); //Diode 0
+		DDRD |= (1 << 1); //Diode 1
+		DDRD |= (1 << 2); //Diode 2
 
 
 		//Enable input pins
-		DDRC &=~(1<<0); //C1
-		DDRC &=~(1<<1); //C2
-		DDRC &=~(1<<2); //C3
-		DDRC &=~(1<<3); //C4
-		DDRC &=~(1<<4); //C5
-		DDRC &=~(1<<5); //C6
-		DDRD &=~(1<<3); //C7
+		DDRC &= ~(1 << 0); //C1
+		DDRC &= ~(1 << 1); //C2
+		DDRC &= ~(1 << 2); //C3
+		DDRC &= ~(1 << 3); //C4
+		DDRC &= ~(1 << 4); //C5
+		DDRC &= ~(1 << 5); //C6
+		DDRD &= ~(1 << 3); //C7
 
 		//direction constant
-		PORTD |=(1<<4); //DIR A1
-		PORTD &=~(1<<5); //DIR A2
-		PORTD |=(1<<6); //DIR B1
-		PORTD &=~(1<<7); //DIR B2
+		PORTD |= (1 << 4); //DIR A1
+		PORTD &= ~(1 << 5); //DIR A2
+		PORTD |= (1 << 6); //DIR B1
+		PORTD &= ~(1 << 7); //DIR B2
 
 		//PWM settings
 
@@ -128,11 +126,11 @@ void initialize()
 		//OCR1B = 300;
 
 //		//FastPwm 8 bit
-//		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<COM1A0)|(1<<COM1B0) | (1<<WGM10);
-//		TCCR1B=(1<WGM12)|(1<<CS11);
+//		TCCR1A=(1 << COM1A1)|(1 << COM1B1)|(1 << COM1A0)|(1 << COM1B0) | (1 << WGM10);
+//		TCCR1B=(1<WGM12)|(1 << CS11);
 
-		TCCR1A=(1<<COM1A1)|(1<<COM1B1)|(1<<WGM11);
-		TCCR1B=(1<<WGM13)|(1<WGM12)|(1<<CS10);
+		TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
+		TCCR1B = (1 << WGM13) | (1<WGM12) | (1 << CS10);
 }
 
 /**
@@ -156,7 +154,7 @@ void readSensors()
 }
 
 // set maxes to 320 xD
-//def lmin : 210 rmin 185 lrmax 320
+// def lmin : 210 rmin 185 lrmax 320
 static const int lmin = 170;
 static const int lmax = 260;
 static const int rmin = 130;
@@ -185,26 +183,28 @@ void setRightMotorPwm(int value)
  */
 int getDifference()
 {
-	int toReturn = 0;
-	for(int i = 0; i<7; i++)
-		toReturn += (sensors & (1<<( 6- i)))?k[i]:0;
-	return toReturn;
+	int result = 0;
+	
+	for(int i = 0; i < 7; ++i)
+		result += (sensors & (1 << ( 6- i))) ? k[i] : 0;
+		
+	return result;
 }
 
 void diodesDiagnose(void)
 {
 	// light the middle diode if middle sensor is above the line
-	if((sensors & (1<<3)) > 0)
+	if((sensors & (1 << 3)) > 0)
 		PORTD |= 2;
 	else
 		PORTD &= ~(2);
 	// same for right sensor and bottom diode
-	if((sensors & (1<<4)) > 0)
+	if((sensors & (1 << 4)) > 0)
 		PORTD |= 1;
 	else
 		PORTD &= ~(1);
 	//same for left sensor and top diode
-	if((sensors & (1<<2)) > 0)
+	if((sensors & (1 << 2)) > 0)
 		PORTD |= 4;
 	else
 		PORTD &= ~(4);
