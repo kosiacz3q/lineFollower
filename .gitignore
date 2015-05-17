@@ -30,3 +30,15 @@
 
 # Debug files
 *.dSYM/
+ 
+*.cof
+*.hex
+*.obj
+*.elf
+*.conf
+*.o
+*.bin
+*.lst
+*.map
+*.srec
+.DS_STORE
