@@ -3,14 +3,22 @@
 //Define WHITE if the robot is supposed to follow the white line.
 //#define WHITE
 
-/*
-*	Global variables
-*/
-int k[7] = {-70, -16, -12, 0, 12, 16, 70};
+/**********************************************************/
+#region					Global variables
+/**********************************************************/
+int k[7] = {70, 16, 12, 0, -12, -16, -70};
 
 int kP = 40;
 int kD = 10;
-int kI = 10;
+float kI = 1;
+
+
+float diffPart = 0;
+int intPart = 0;
+int propPart = 0;
+
+int current_read = 0;
+int previous_read = 0;
 
 /**
  * Global variable for storing the binary input from sensors.
@@ -29,25 +37,25 @@ int kI = 10;
 int sensors = 0;
 int activeSensor = 3;
 
-/*
- * Sets all SFRs.
-*/
+#end
+
+/**********************************************************/
+#region				Functions declarations
+/**********************************************************/
+
 void initialize(void);
+inline void updateSensors(void);
+inline int  getSteeringValue(void);
 
-/*
- * Updates global sensors variable.
- */
-void updateSensors(void);
-int  getSteeringValue(void);
+// indicates values from choosed sensors (1-7) 
+// di : i-diode
+void diodesDiagnose(int d1, int d2, int d3);
 
-
-
-// last working 16 10 15
-void diodesDiagnose(void);
 void indicateValue(int val, int max);
 
-//inline int max(int a, int b){ return a>b ? a:b;}
-//inline int min(int a, int b){ return a>b ? b:a;}
+inline void computeP(void); 
+inline void computeI(void);
+inline void computeD(void);
 
 /**
  * Changes the speed of the motor.
@@ -56,103 +64,73 @@ void indicateValue(int val, int max);
  */
 void setLeftMotorPwm(int value);
 void setRightMotorPwm(int value);
+#end
 
-
-
+/**********************************************************/
+#region						Main
+/*********************************************************/
 int main(void)
 {
 	initialize();
-	//updateSensors();
-	
-	int current_read = 0;
-	int previous_read;
-
-	float diffPart = 0;
-	int intPart = 0;
-	int propPart = 0;
 	
 	int steeringPart = 0;
+	
+	computeP(); 
+	computeI();
+	computeD();
 
 	while(1)
 	{
 		updateSensors();
-		//diodesDiagnose();
+		diodesDiagnose(7,4,1);
 		
 		previous_read = current_read;
 		current_read = getSteeringValue();
-		
-		diffPart = diffPart * 0.99 + (current_read - previous_read) * kD;
-		
-		intPart += current_read * kI;
-		
-		if (intPart < -500)
-			intPart = -500;
-		else if (intPart > 500)
-			intPart = 500;
-		
-		propPart = current_read * kP;
 		
 		steeringPart = (int)(diffPart) + intPart + propPart;
 		
 		if(steeringPart > 0)
 		{
-			indicateValue(steeringPart, 1000);
+			//indicateValue(steeringPart, 1000);
 			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
-			indicateValue(-steeringPart, 1000);
+			//indicateValue(-steeringPart, 1000);
 			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
 		}	
 	}
 }
+#end
 
-void initialize()
+/**********************************************************/
+#region				Functions definitions
+/*********************************************************/
+
+inline void computeP()
 {
-	// Enable output pins
-	DDRB |= (1 << 1); //PWM A
-	DDRB |= (1 << 2); //PWM B
-	DDRD |= (1 << 4); //DIR A1
-	DDRD |= (1 << 5); //DIR A2
-	DDRD |= (1 << 6); //DIR B1
-	DDRD |= (1 << 7); //DIR B2
-	DDRD |= (1 << 0); //Diode 0
-	DDRD |= (1 << 1); //Diode 1
-	DDRD |= (1 << 2); //Diode 2
-
-
-	//Enable input pins
-	DDRC &= ~(1 << 0); //C1
-	DDRC &= ~(1 << 1); //C2
-	DDRC &= ~(1 << 2); //C3
-	DDRC &= ~(1 << 3); //C4
-	DDRC &= ~(1 << 4); //C5
-	DDRC &= ~(1 << 5); //C6
-	DDRD &= ~(1 << 3); //C7
-
-	//direction constant
-	PORTD |= (1 << 4); //DIR A1
-	PORTD &= ~(1 << 5); //DIR A2
-	PORTD |= (1 << 6); //DIR B1
-	PORTD &= ~(1 << 7); //DIR B2
-
-	//PWM settings
-
-	ICR1  = 400;
-	//OCR1A = 300;
-	//OCR1B = 300;
-
-	// FastPwm 8 bit
-	// TCCR1A=(1 << COM1A1)|(1 << COM1B1)|(1 << COM1A0)|(1 << COM1B0) | (1 << WGM10);
-	// TCCR1B=(1<WGM12)|(1 << CS11);
-
-	TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
-	TCCR1B = (1 << WGM13) | (1<WGM12) | (1 << CS10);
+	propPart = current_read * kP;
 }
+
+inline void computeI()
+{
+	intPart += current_read * kI;
+	
+	if (intPart < -500)
+		intPart = -500;
+	else if (intPart > 500)
+		intPart = 500;
+}
+
+inline void computeD()
+{
+	diffPart = diffPart * 0.99 + (current_read - previous_read) * kD;
+}
+
 
 /**
  * Set global sensor variable.
@@ -185,13 +163,14 @@ void updateSensors()
 				return;
 			}
 			
-			if (sensors & (1 << 6 - i))
+			if (sensors & (1 << (6 - i)))
 			{
 				activeSensor = 6 - i;
 				return;
 			}
 		}
 		
+		intPart = 0;
 		activeSensor = 3;
 	}
 }
@@ -238,21 +217,22 @@ int getSteeringValue()
 	return k[activeSensor];
 }
 
-void diodesDiagnose(void)
+void diodesDiagnose(int d1, int d2, int d3)
 {
-	// light the middle diode if middle sensor is above the line
-	if((sensors & (1 << 3)) > 0)
+	//d1
+	if((sensors & (1 << (d1 - 1))) > 0)
+		PORTD |= 1;
+	else
+		PORTD &= ~(1);
+	
+	//d2
+	if((sensors & (1 << (d2 - 1))) > 0)
 		PORTD |= 2;
 	else
 		PORTD &= ~(2);
 		
-	// same for right sensor and bottom diode
-	if((sensors & (1 << 6)) > 0)
-		PORTD |= 1;
-	else
-		PORTD &= ~(1);
-	//same for left sensor and top diode
-	if((sensors & (1 << 0)) > 0)
+	//d3
+	if((sensors & (1 << (d3 - 1))) > 0)
 		PORTD |= 4;
 	else
 		PORTD &= ~(4);
@@ -281,4 +261,49 @@ void indicateValue(int val, int max)
 		PORTD |= 4;
 	}
 }
+
+void initialize()
+{
+	// Enable output pins
+	DDRB |= (1 << 1); //PWM A
+	DDRB |= (1 << 2); //PWM B
+	DDRD |= (1 << 4); //DIR A1
+	DDRD |= (1 << 5); //DIR A2
+	DDRD |= (1 << 6); //DIR B1
+	DDRD |= (1 << 7); //DIR B2
+	DDRD |= (1 << 0); //Diode 0
+	DDRD |= (1 << 1); //Diode 1
+	DDRD |= (1 << 2); //Diode 2
+
+
+	//Enable input pins
+	DDRC &= ~(1 << 0); //C1
+	DDRC &= ~(1 << 1); //C2
+	DDRC &= ~(1 << 2); //C3
+	DDRC &= ~(1 << 3); //C4
+	DDRC &= ~(1 << 4); //C5
+	DDRC &= ~(1 << 5); //C6
+	DDRD &= ~(1 << 3); //C7
+
+	//direction constant
+	PORTD |= (1 << 4); //DIR A1
+	PORTD &= ~(1 << 5); //DIR A2
+	PORTD |= (1 << 6); //DIR B1
+	PORTD &= ~(1 << 7); //DIR B2
+
+	//PWM settings
+
+	ICR1  = 400;
+	//OCR1A = 300;
+	//OCR1B = 300;
+
+	// FastPwm 8 bit
+	// TCCR1A=(1 << COM1A1)|(1 << COM1B1)|(1 << COM1A0)|(1 << COM1B0) | (1 << WGM10);
+	// TCCR1B=(1<WGM12)|(1 << CS11);
+
+	TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
+	TCCR1B = (1 << WGM13) | (1<WGM12) | (1 << CS10);
+}
+
+#end
 
