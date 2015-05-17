@@ -13,7 +13,8 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
-int k[7] = {-25, -5, -3, 0, 3, 5, 25};
+
+int k[7] = {-30, -5, -3, 0, 3, 5, 30};
 
 int kP = 30;
 int kD = 10;
@@ -21,6 +22,7 @@ int kI = 20;
 
 // last working 16 10 15
 void diodesDiagnose(void);
+void indicateValue(int val, int max);
 
 inline int max(int a, int b){ return a>b ? a:b;}
 inline int min(int a, int b){ return a>b ? b:a;}
@@ -52,8 +54,9 @@ int sensors = 0;
 int main(void)
 {
 	initialize();
-	readSensors();
-	int current_read = getDifference();
+	//readSensors();
+	
+	int current_read = 0;
 	int previous_read;
 
 	float diffPart = 0;
@@ -64,29 +67,41 @@ int main(void)
 	while(1)
 	{
 		readSensors();
-		diodesDiagnose();
+		//diodesDiagnose();
 		
 		previous_read = current_read;
 		current_read = getDifference();
-		
+		/*
 		diffPart = diffPart / 1.05 + (current_read - previous_read) * kD;
 		
 		intPart += current_read * kI;
-		intPart = (intPart < -1000)  ?  (-1000) : ((intPart > 1000)  ?  1000 : intPart);
+		
+		if (intPart < -1000)
+			intPart = -1000;
+		else if (intPart > 1000)
+			intPart = 1000;
 		
 		propPart = current_read * kP;
-		steeringPart = round(diffPart) + intPart + propPart;
+		*/
+		steeringPart = (int)(diffPart) + intPart + propPart;
+	
 		
 		if(steeringPart > 0)
 		{
+			indicateValue(steeringPart, 1000);
+			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
+			indicateValue(-steeringPart, 1000);
+			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
 		}
+		
+		
 	}
 }
 
@@ -156,9 +171,9 @@ void readSensors()
 // set maxes to 320 xD
 // def lmin : 210 rmin 185 lrmax 320
 static const int lmin = 170;
-static const int lmax = 260;
+static const int lmax = 300;
 static const int rmin = 130;
-static const int rmax = 255;
+static const int rmax = 280;
 static const int maxSpeed = 1000;
 
 void setLeftMotorPwm(int value)
@@ -210,4 +225,27 @@ void diodesDiagnose(void)
 		PORTD &= ~(4);
 }
 
+void indicateValue(int val, int max)
+{
+	PORTD &= ~(1);
+	PORTD &= ~(2);
+	PORTD &= ~(4);
+
+	if (val < max / 4)
+	{
+		//nothing to do
+	}
+	else if (val < 2 * max / 4)
+	{
+		PORTD |= 1;
+	}
+	else if (val < 3 * max / 4)
+	{
+		PORTD |= 2;
+	}
+	else
+	{
+		PORTD |= 4;
+	}
+}
 
