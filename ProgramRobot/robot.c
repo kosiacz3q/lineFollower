@@ -4,16 +4,31 @@
 //#define WHITE
 
 /**********************************************************/
-#region					Global variables
+//				Global variables
 /**********************************************************/
-int k[7] = {70, 16, 12, 0, -12, -16, -70};
+int k[7] = {500, 300, 150, 0, -150, -300, -500};
 
-int kP = 40;
-int kD = 10;
+/*
+Kp = Proptional Constant.
+Ki = Integral Constant.
+Kd = Derivative Constant.
+err = Expected Output - Actual Output ie. error;
+int  = int from previous loop + err; ( i.e. integral error )
+der  = err - err from previous loop; ( i.e. differential error)
+dt = execution time of loop.
+*/
+
+float kP = 1; 
+float kD = 0.006;
 float kI = 1;
 
+float err;
+float integralError;
+float differentialError;
+const float dt = 0.003; //measured in seconds
 
-float diffPart = 0;
+
+int diffPart = 0;
 int intPart = 0;
 int propPart = 0;
 
@@ -37,10 +52,9 @@ int previous_read = 0;
 int sensors = 0;
 int activeSensor = 3;
 
-#end
 
 /**********************************************************/
-#region				Functions declarations
+//				Functions declarations
 /**********************************************************/
 
 void initialize(void);
@@ -64,51 +78,53 @@ inline void computeD(void);
  */
 void setLeftMotorPwm(int value);
 void setRightMotorPwm(int value);
-#end
+
 
 /**********************************************************/
-#region						Main
+//						Main
 /*********************************************************/
 int main(void)
 {
 	initialize();
 	
 	int steeringPart = 0;
-	
-	computeP(); 
-	computeI();
-	computeD();
 
 	while(1)
 	{
 		updateSensors();
-		diodesDiagnose(7,4,1);
+		//diodesDiagnose(7,4,1);
 		
-		previous_read = current_read;
 		current_read = getSteeringValue();
+		differentialError = previous_read - current_read;
 		
-		steeringPart = (int)(diffPart) + intPart + propPart;
+		computeP(); 
+		computeI();
+		computeD();
+		
+		steeringPart = diffPart + intPart + propPart;
 		
 		if(steeringPart > 0)
 		{
-			//indicateValue(steeringPart, 1000);
+			indicateValue(steeringPart, 1000);
 			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
-			//indicateValue(-steeringPart, 1000);
+			indicateValue(-steeringPart, 1000);
 			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
 		}	
+		
+		previous_read = current_read;
 	}
 }
-#end
+
 
 /**********************************************************/
-#region				Functions definitions
+//				Functions definitions
 /*********************************************************/
 
 inline void computeP()
@@ -118,17 +134,17 @@ inline void computeP()
 
 inline void computeI()
 {
-	intPart += current_read * kI;
+	intPart += current_read * kI * dt;
 	
-	if (intPart < -500)
-		intPart = -500;
-	else if (intPart > 500)
-		intPart = 500;
+	if (intPart < -1000)
+		intPart = -1000;
+	else if (intPart > 1000)
+		intPart = 1000;
 }
 
 inline void computeD()
 {
-	diffPart = diffPart * 0.99 + (current_read - previous_read) * kD;
+	diffPart = (differentialError * kD) / dt;
 }
 
 
@@ -150,7 +166,6 @@ void updateSensors()
 	#ifdef WHITE
 	sensors = ~sensors;
 	#endif
-	
 	
 	//selecting active sensor
 	if (sensors)
@@ -304,6 +319,4 @@ void initialize()
 	TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
 	TCCR1B = (1 << WGM13) | (1<WGM12) | (1 << CS10);
 }
-
-#end
 
