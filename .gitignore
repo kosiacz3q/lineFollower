@@ -41,4 +41,7 @@
 *.lst
 *.map
 *.srec
+*.eep
+*.lss
+*.sym
 .DS_STORE
