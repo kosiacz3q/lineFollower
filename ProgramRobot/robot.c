@@ -6,7 +6,7 @@
 /**********************************************************/
 //				Global variables
 /**********************************************************/
-int k[7] = {500, 300, 150, 0, -150, -300, -500};
+int k[7] = {1000, 300, 150, 0, -150, -300, -1000};
 
 /*
 Kp = Proptional Constant.
@@ -18,9 +18,9 @@ der  = err - err from previous loop; ( i.e. differential error)
 dt = execution time of loop.
 */
 
-float kP = 1; 
+float kP = 1.5; 
 float kD = 0.006;
-float kI = 1;
+float kI = 0.5;
 
 float err;
 float integralError;
@@ -92,7 +92,7 @@ int main(void)
 	while(1)
 	{
 		updateSensors();
-		//diodesDiagnose(7,4,1);
+		diodesDiagnose(7,4,1);
 		
 		current_read = getSteeringValue();
 		differentialError = previous_read - current_read;
@@ -105,14 +105,14 @@ int main(void)
 		
 		if(steeringPart > 0)
 		{
-			indicateValue(steeringPart, 1000);
+			//indicateValue(steeringPart, 1000);
 			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
-			indicateValue(-steeringPart, 1000);
+			//indicateValue(-steeringPart, 1000);
 			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
@@ -185,13 +185,11 @@ void updateSensors()
 			}
 		}
 		
-		intPart = 0;
+		intPart = 0; //if only central sensor is active, We want to reset integral part  
 		activeSensor = 3;
 	}
 }
 
-// set maxes to 320 xD
-// def lmin : 210 rmin 185 lrmax 320
 const int lmin = 170;
 const int lmax = 300;
 const int rmin = 130;
@@ -200,35 +198,16 @@ const int maxSpeed = 1000;
 
 void setLeftMotorPwm(int value)
 {
-	//OCR1B = max(min(lmin + round(value*((float)lmax-lmin)/1000), lmax),lmin);
 	OCR1B = lmin + (int)(value * ((float)lmax-lmin) / maxSpeed);
 }
 
 void setRightMotorPwm(int value)
 {
-	//OCR1A = max(min(rmin + round(value*((float)rmax-rmin)/1000), rmax),rmin);
 	OCR1A = rmin + (int)(value * ((float)rmax-rmin) / maxSpeed);
 }
 
-/**
- * Look at int k[]
- * This function returns k[0] if only most left sensor is above the line,
- * k[1] if only second most left sensor is above the line
- * and so on
- * If more than one sensor is above the line the return value is sum of those k's.
- *
- */
 int getSteeringValue()
 {
-
-/*
-	int result = 0;
-	
-	for(int i = 0; i < 7; ++i)
-		result += (sensors & (1 << ( 6- i))) ? k[i] : 0;
-		
-	return result;*/
-	
 	return k[activeSensor];
 }
 
