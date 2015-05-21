@@ -22,7 +22,7 @@ dt = execution time of loop.
 
 float kP = 0.25; 
 float kD = 1;
-float kI = 0.15;
+float kI = 1;
 
 float err;
 float integralError;
@@ -30,7 +30,7 @@ float differentialError;
 
 //experimentaly measured 
 const float dt = 0.0003; 
-
+const int brakeForce = 370;
 
 float diffPart = 0;
 float intPart = 0;
@@ -38,6 +38,14 @@ int propPart = 0;
 
 int current_read = 0;
 int previous_read = 0;
+void binaryOutput(int val){
+	PORTD &= ~(1);
+	PORTD &= ~(2);
+	PORTD &= ~(4);
+	if(val & 4) PORTD |= 4;
+	if(val & 2) PORTD |= 2;
+	if(val & 1) PORTD |= 1;
+}
 
 /**
  * Global variable for storing the binary input from sensors.
@@ -55,7 +63,9 @@ int previous_read = 0;
  */
 int sensors = 0;
 int activeSensor = 3;
+int lastKnownNonCenterSensor = 3;
 
+int isSensorDetected;
 
 /**********************************************************/
 //				Functions declarations
@@ -94,12 +104,16 @@ int main(void)
 	
 	int steeringPart = 0;
 	activeSensor = 3;
+	isSensorDetected=1;
+	
 	while(1)
 	{
 		updateSensors();
 		//diodesDiagnose(7,4,1);
-
-		
+		//binaryOutput(lastKnownNonCenterSensor);
+		//indicateValue(7 - lastKnownNonCenterSensor, 4);
+		//indicateValue(isSensorDetected * 10, 10);
+		binaryOutput(isSensorDetected);
 		current_read = getSteeringValue();
 		differentialError = current_read - previous_read;
 		
@@ -114,19 +128,47 @@ int main(void)
 		else if (steeringPart < -1000)
 			steeringPart = -1000;
 		
-		if(steeringPart > 0)
+		if(!isSensorDetected && lastKnownNonCenterSensor != 3)
+		{
+		
+			if (lastKnownNonCenterSensor > 3)
+			{
+				intPart = diffPart - 0;
+				setRightMotorPwm(1000);
+				PORTD &= ~(1 << 6); //DIR B1
+				PORTD |= (1 << 7); //DIR B2
+				setLeftMotorPwm(brakeForce);			
+			}
+			else if (lastKnownNonCenterSensor < 3)
+			{
+				intPart = diffPart = 0;
+				PORTD &= ~(1 << 4); //DIR A1
+				PORTD |= (1 << 5); //DIR A2
+				setRightMotorPwm(brakeForce);
+				setLeftMotorPwm(1000);
+			}
+		
+		}
+		
+		else if(steeringPart > 0)
 		{
 			//indicateValue(steeringPart, 1000);
-			indicateValue((int)diffPart, 1000);
-			
+			//indicateValue((int)diffPart, 1000);
+			PORTD |= (1 << 4); //DIR A1
+			PORTD &= ~(1 << 5); //DIR A2	
+			PORTD |= (1 << 6); //DIR B1
+			PORTD &= ~(1 << 7); //DIR B2		
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
 			//indicateValue(-steeringPart, 1000);
-			indicateValue((int)-diffPart, 1000);
-			
+			//indicateValue((int)-diffPart, 1000);
+			PORTD |= (1 << 4); //DIR A1
+			PORTD &= ~(1 << 5); //DIR A2	
+			PORTD |= (1 << 6); //DIR B1
+			PORTD &= ~(1 << 7); //DIR B2				
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
 		}	
@@ -185,35 +227,47 @@ void updateSensors()
 	int rightSensor;
 	
 	//selecting active sensor
-	if (sensors)
+
+	for (int i = 0; i < 3; ++i)
 	{
-		for (int i = 0; i < 3; ++i)
+		leftSensor = (sensors & (1 << i));
+		rightSensor = (sensors & (1 << (6 - i)));
+	
+		if (leftSensor && rightSensor)
 		{
-			leftSensor = (sensors & (1 << i));
-			rightSensor = (sensors & (1 << (6 - i)));
-		
-			if (leftSensor && rightSensor)
-			{
-				activeSensor = 3;
-				return;
-			}
-		
-			if (leftSensor)
-			{
-				activeSensor = i;
-				return;
-			}
-			
-			if (rightSensor)
-			{
-				activeSensor = 6 - i;
-				return;
-			}
+			activeSensor = 3;
+			isSensorDetected = 1;
+			return;
+		}
+	
+		if (leftSensor)
+		{
+			activeSensor = i;
+			lastKnownNonCenterSensor = i;
+			isSensorDetected = 1;
+			return;
 		}
 		
-		//intPart = 0; //if only central sensor is active, We want to reset integral part  
-		
+		if (rightSensor)
+		{
+			isSensorDetected = 1;
+			lastKnownNonCenterSensor = 6-i;
+			activeSensor = 6 - i;
+			return;
+		}
 	}
+	
+	if(sensors & (1 << 3))
+	{
+		activeSensor = 3;
+		isSensorDetected = 1;
+		return;
+	}
+	
+	isSensorDetected = 0;
+	
+	
+	//intPart = 0; //if only central sensor is active, We want to reset integral part  
 }
 
 const int lmin = 0;
@@ -224,8 +278,8 @@ const int rmin = 0;
 //const int lmax = 220;
 
 //max
-const int rmax = 280;
-const int lmax = 300;
+const int rmax = 275;
+const int lmax = 295;
 
 const int maxSpeed = 1000;
 
