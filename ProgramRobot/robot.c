@@ -7,7 +7,7 @@
 /**********************************************************/
 //				Global variables
 /**********************************************************/
-int k[7] 					= {1000, 300, 150, 0, -150, -300, -1000};
+int k[7] 					= {1000, 400, 200, 0, -200, -400, -1000};
 int intPartBoundaries[7]	= {1000, 300, 150, 0, -150, -300, -1000};
 
 /*
@@ -20,7 +20,7 @@ der  = err - err from previous loop; ( i.e. differential error)
 dt = execution time of loop.
 */
 
-float kP = 0.25; 
+float kP = 2; 
 float kD = 1;
 float kI = 1;
 
@@ -30,7 +30,7 @@ float differentialError;
 
 //experimentaly measured 
 const float dt = 0.0003; 
-const int brakeForce = 370;
+const int brakeForce = 600;
 
 float diffPart = 0;
 float intPart = 0;
@@ -102,18 +102,20 @@ int main(void)
 {
 	initialize();
 	
-	int steeringPart = 0;
+	int steeringValue = 0;
 	activeSensor = 3;
 	isSensorDetected=1;
 	
 	while(1)
 	{
 		updateSensors();
+		
 		//diodesDiagnose(7,4,1);
 		//binaryOutput(lastKnownNonCenterSensor);
-		//indicateValue(7 - lastKnownNonCenterSensor, 4);
-		//indicateValue(isSensorDetected * 10, 10);
-		binaryOutput(isSensorDetected);
+		//binaryOutput(!isSensorDetected);
+		
+		
+		
 		current_read = getSteeringValue();
 		differentialError = current_read - previous_read;
 		
@@ -121,15 +123,17 @@ int main(void)
 		computeI();
 		computeD();
 		
-		steeringPart = diffPart + (int)intPart + propPart;
+		steeringValue = diffPart + (int)intPart + propPart;
 		
-		if (steeringPart > 1000)
-			steeringPart = 1000;
-		else if (steeringPart < -1000)
-			steeringPart = -1000;
+		if (steeringValue > 1000)
+			steeringValue = 1000;
+		else if (steeringValue < -1000)
+			steeringValue = -1000;
 		
 		if(!isSensorDetected && lastKnownNonCenterSensor != 3)
 		{
+			steeringValue = -250 ;
+		
 		
 			if (lastKnownNonCenterSensor > 3)
 			{
@@ -149,29 +153,37 @@ int main(void)
 			}
 		
 		}
-		
-		else if(steeringPart > 0)
+		else if(steeringValue > 0)
 		{
-			//indicateValue(steeringPart, 1000);
+			//indicateValue(steeringValue, 1000);
 			//indicateValue((int)diffPart, 1000);
 			PORTD |= (1 << 4); //DIR A1
 			PORTD &= ~(1 << 5); //DIR A2	
 			PORTD |= (1 << 6); //DIR B1
 			PORTD &= ~(1 << 7); //DIR B2		
-			setRightMotorPwm(1000 - steeringPart);
+			setRightMotorPwm(1000 - steeringValue);
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
-			//indicateValue(-steeringPart, 1000);
+			//indicateValue(-steeringValue, 1000);
 			//indicateValue((int)-diffPart, 1000);
 			PORTD |= (1 << 4); //DIR A1
 			PORTD &= ~(1 << 5); //DIR A2	
 			PORTD |= (1 << 6); //DIR B1
 			PORTD &= ~(1 << 7); //DIR B2				
 			setRightMotorPwm(1000);
-			setLeftMotorPwm(1000 + steeringPart);
+			setLeftMotorPwm(1000 + steeringValue);
 		}	
+		
+		if ( steeringValue < 0)
+		{
+			indicateValue(-steeringValue + 250,1000);
+		}
+		else
+		{
+			indicateValue(steeringValue + 250,1000);
+		}
 		
 		previous_read = current_read;
 	}
@@ -278,8 +290,8 @@ const int rmin = 0;
 //const int lmax = 220;
 
 //max
-const int rmax = 275;
-const int lmax = 295;
+const int rmax = 295;
+const int lmax = 315;
 
 const int maxSpeed = 1000;
 
