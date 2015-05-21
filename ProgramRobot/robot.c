@@ -9,7 +9,7 @@
 /**********************************************************/
 int k[7] 					= {1000, 300, 150, 0, -150, -300, -1000};
 int intPartBoundaries[7]	= {1000, 300, 150, 0, -150, -300, -1000};
-
+int brakeForce = 479;
 /*
 Kp = Proptional Constant.
 Ki = Integral Constant.
@@ -21,7 +21,7 @@ dt = execution time of loop.
 */
 
 float kP = 0.25; 
-float kD = 0.006;
+float kD = 1;
 float kI = 0.15;
 
 float err;
@@ -101,7 +101,7 @@ int main(void)
 
 		
 		current_read = getSteeringValue();
-		differentialError = previous_read - current_read;
+		differentialError = current_read - previous_read;
 		
 		computeP(); 
 		computeI();
@@ -118,8 +118,16 @@ int main(void)
 		{
 			//indicateValue(steeringPart, 1000);
 			indicateValue((int)diffPart, 1000);
-			
-			setRightMotorPwm(1000 - steeringPart);
+			if(steeringPart == 1000){
+				PORTD &= ~(1 << 4); //DIR A1
+				PORTD |= (1 << 5); //DIR A2
+				setRightMotorPwm(brakeForce);
+			}
+			else{
+				PORTD |= (1 << 4); //DIR A1
+				PORTD &= ~(1 << 5); //DIR A2
+				setRightMotorPwm(1000 - steeringPart);
+			}
 			setLeftMotorPwm(1000);
 		}
 		else
@@ -128,7 +136,18 @@ int main(void)
 			indicateValue((int)-diffPart, 1000);
 			
 			setRightMotorPwm(1000);
-			setLeftMotorPwm(1000 + steeringPart);
+			
+			if(steeringPart == -1000){
+				PORTD &= ~(1 << 6); //DIR B1
+				PORTD |= (1 << 7); //DIR B2
+				setLeftMotorPwm(brakeForce);
+			
+			}
+			else{
+				PORTD |= (1 << 6); //DIR B1
+				PORTD &= ~(1 << 7); //DIR B2
+				setLeftMotorPwm(1000 + steeringPart);
+			}
 		}	
 		
 		previous_read = current_read;
@@ -159,7 +178,9 @@ inline void computeI()
 
 inline void computeD()
 {
-	diffPart = diffPart * (1 - dt) + (differentialError * kD) / dt;
+	diffPart = diffPart * (1 - 0.002) + (differentialError * kD) ;
+	
+	
 }
 
 
