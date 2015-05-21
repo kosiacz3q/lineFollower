@@ -9,7 +9,7 @@
 /**********************************************************/
 int k[7] 					= {1000, 300, 150, 0, -150, -300, -1000};
 int intPartBoundaries[7]	= {1000, 300, 150, 0, -150, -300, -1000};
-int brakeForce = 479;
+
 /*
 Kp = Proptional Constant.
 Ki = Integral Constant.
@@ -20,9 +20,11 @@ der  = err - err from previous loop; ( i.e. differential error)
 dt = execution time of loop.
 */
 
-float kP = 0.25; 
-float kD = 1;
-float kI = 0.15;
+const float kP = 0.25; 
+const float kD = 1;
+const float kI = 0.15;
+
+const int brakeForce = 350;
 
 float err;
 float integralError;
@@ -38,6 +40,10 @@ int propPart = 0;
 
 int current_read = 0;
 int previous_read = 0;
+
+int isLineDetected;
+
+
 
 /**
  * Global variable for storing the binary input from sensors.
@@ -88,14 +94,33 @@ void setRightMotorPwm(int value);
 //						Main
 /*********************************************************/
 
+int timer = 1000;
+int globalTimer = 0;
+
 int main(void)
 {
 	initialize();
 	
 	int steeringPart = 0;
 	activeSensor = 3;
+	isLineDetected = 1;
+	
 	while(1)
 	{
+	
+	
+		if (!--timer)
+		{
+			timer = 1000;
+			
+			++globalTimer;
+			
+			if (globalTimer == 16)
+				globalTimer = 0;
+		}
+		
+		indicateValue(globalTimer, 16);
+	
 		updateSensors();
 		//diodesDiagnose(7,4,1);
 
@@ -117,8 +142,9 @@ int main(void)
 		if(steeringPart > 0)
 		{
 			//indicateValue(steeringPart, 1000);
-			indicateValue((int)diffPart, 1000);
-			if(steeringPart == 1000){
+			//indicateValue((int)diffPart, 1000);
+			
+			if(activeSensor == 0 && !isLineDetected){
 				PORTD &= ~(1 << 4); //DIR A1
 				PORTD |= (1 << 5); //DIR A2
 				setRightMotorPwm(brakeForce);
@@ -128,16 +154,17 @@ int main(void)
 				PORTD &= ~(1 << 5); //DIR A2
 				setRightMotorPwm(1000 - steeringPart);
 			}
+			
 			setLeftMotorPwm(1000);
 		}
 		else
 		{
 			//indicateValue(-steeringPart, 1000);
-			indicateValue((int)-diffPart, 1000);
+			//indicateValue((int)-diffPart, 1000);
 			
 			setRightMotorPwm(1000);
 			
-			if(steeringPart == -1000){
+			if(activeSensor == 6 && !isLineDetected){
 				PORTD &= ~(1 << 6); //DIR B1
 				PORTD |= (1 << 7); //DIR B2
 				setLeftMotorPwm(brakeForce);
@@ -216,21 +243,26 @@ void updateSensors()
 			if (leftSensor && rightSensor)
 			{
 				activeSensor = 3;
+				isLineDetected = 1;
 				return;
 			}
 		
 			if (leftSensor)
 			{
 				activeSensor = i;
+				isLineDetected = 1;
 				return;
 			}
 			
 			if (rightSensor)
 			{
 				activeSensor = 6 - i;
+				isLineDetected = 1;
 				return;
 			}
 		}
+		
+		isLineDetected = 0;
 		
 		//intPart = 0; //if only central sensor is active, We want to reset integral part  
 		
