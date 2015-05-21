@@ -21,7 +21,7 @@ dt = execution time of loop.
 */
 
 float kP = 0.25; 
-float kD = 0.006;
+float kD = 1;
 float kI = 0.15;
 
 float err;
@@ -101,7 +101,7 @@ int main(void)
 
 		
 		current_read = getSteeringValue();
-		differentialError = previous_read - current_read;
+		differentialError = current_read - previous_read;
 		
 		computeP(); 
 		computeI();
@@ -159,7 +159,7 @@ inline void computeI()
 
 inline void computeD()
 {
-	diffPart = diffPart * (1 - dt) + (differentialError * kD) / dt;
+	diffPart = diffPart * (1 - 0.002) + (differentialError * kD);
 }
 
 
