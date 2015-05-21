@@ -1,12 +1,14 @@
 #include<avr/io.h>
 #include<util/delay.h>
+
 //Define WHITE if the robot is supposed to follow the white line.
 //#define WHITE
 
 /**********************************************************/
 //				Global variables
 /**********************************************************/
-int k[7] = {1000, 300, 150, 0, -150, -300, -1000};
+int k[7] 					= {1000, 300, 150, 0, -150, -300, -1000};
+int intPartBoundaries[7]	= {1000, 300, 150, 0, -150, -300, -1000};
 
 /*
 Kp = Proptional Constant.
@@ -25,11 +27,13 @@ float kI = 0.5;
 float err;
 float integralError;
 float differentialError;
-const float dt = 0.003; //measured in seconds
+
+//experimentaly measured 
+const float dt = 0.0003; 
 
 
 int diffPart = 0;
-int intPart = 0;
+float intPart = 0;
 int propPart = 0;
 
 int current_read = 0;
@@ -83,6 +87,7 @@ void setRightMotorPwm(int value);
 /**********************************************************/
 //						Main
 /*********************************************************/
+
 int main(void)
 {
 	initialize();
@@ -92,7 +97,8 @@ int main(void)
 	while(1)
 	{
 		updateSensors();
-		diodesDiagnose(7,4,1);
+		//diodesDiagnose(7,4,1);
+
 		
 		current_read = getSteeringValue();
 		differentialError = previous_read - current_read;
@@ -101,11 +107,17 @@ int main(void)
 		computeI();
 		computeD();
 		
-		steeringPart = diffPart + intPart + propPart;
+		steeringPart = diffPart + (int)intPart + propPart;
+		
+		if (steeringPart > 1000)
+			steeringPart = 1000;
+		else if (steeringPart < -1000)
+			steeringPart = -1000;
 		
 		if(steeringPart > 0)
 		{
 			//indicateValue(steeringPart, 1000);
+			indicateValue((int)intPart, 500);
 			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
@@ -113,6 +125,7 @@ int main(void)
 		else
 		{
 			//indicateValue(-steeringPart, 1000);
+			indicateValue((int)-intPart, 500);
 			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
@@ -136,10 +149,12 @@ inline void computeI()
 {
 	intPart += current_read * kI * dt;
 	
-	if (intPart < -1000)
-		intPart = -1000;
-	else if (intPart > 1000)
-		intPart = 1000;
+	if (intPart < 0 && intPart < intPartBoundaries[activeSensor] )
+		intPart = intPartBoundaries[activeSensor];
+	else if (intPart > intPartBoundaries[activeSensor] )
+		intPart = intPartBoundaries[activeSensor];
+		
+	
 }
 
 inline void computeD()
@@ -167,33 +182,52 @@ void updateSensors()
 	sensors = ~sensors;
 	#endif
 	
+	int leftSensor;
+	int rightSensor;
+	
 	//selecting active sensor
 	if (sensors)
 	{
 		for (int i = 0; i < 3; ++i)
 		{
-			if (sensors & (1 << i))
+			leftSensor = (sensors & (1 << i));
+			rightSensor = (sensors & (1 << (6 - i)));
+		
+			if (leftSensor && rightSensor)
+			{
+				activeSensor = 3;
+				return;
+			}
+		
+			if (leftSensor)
 			{
 				activeSensor = i;
 				return;
 			}
 			
-			if (sensors & (1 << (6 - i)))
+			if (rightSensor)
 			{
 				activeSensor = 6 - i;
 				return;
 			}
 		}
 		
-		intPart = 0; //if only central sensor is active, We want to reset integral part  
+		//intPart = 0; //if only central sensor is active, We want to reset integral part  
 		activeSensor = 3;
 	}
 }
 
-const int lmin = 170;
-const int lmax = 300;
+const int lmin = 150;
 const int rmin = 130;
-const int rmax = 280;
+
+//test
+const int rmax = 200;
+const int lmax = 220;
+
+//max
+//const int rmax = 280;
+//const int lmax = 300;
+
 const int maxSpeed = 1000;
 
 void setLeftMotorPwm(int value)
@@ -238,15 +272,15 @@ void indicateValue(int val, int max)
 	PORTD &= ~(2);
 	PORTD &= ~(4);
 
-	if (val < max / 4)
+	if (val <= max / 4)
 	{
 		//nothing to do
 	}
-	else if (val < 2 * max / 4)
+	else if (val <= 2 * max / 4)
 	{
 		PORTD |= 1;
 	}
-	else if (val < 3 * max / 4)
+	else if (val <= 3 * max / 4)
 	{
 		PORTD |= 2;
 	}
@@ -290,10 +324,6 @@ void initialize()
 	ICR1  = 400;
 	//OCR1A = 300;
 	//OCR1B = 300;
-
-	// FastPwm 8 bit
-	// TCCR1A=(1 << COM1A1)|(1 << COM1B1)|(1 << COM1A0)|(1 << COM1B0) | (1 << WGM10);
-	// TCCR1B=(1<WGM12)|(1 << CS11);
 
 	TCCR1A = (1 << COM1A1) | (1 << COM1B1) | (1 << WGM11);
 	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
