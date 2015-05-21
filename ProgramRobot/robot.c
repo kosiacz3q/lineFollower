@@ -20,9 +20,9 @@ der  = err - err from previous loop; ( i.e. differential error)
 dt = execution time of loop.
 */
 
-float kP = 1.5; 
+float kP = 0.25; 
 float kD = 0.006;
-float kI = 0.5;
+float kI = 0.15;
 
 float err;
 float integralError;
@@ -32,7 +32,7 @@ float differentialError;
 const float dt = 0.0003; 
 
 
-int diffPart = 0;
+float diffPart = 0;
 float intPart = 0;
 int propPart = 0;
 
@@ -93,7 +93,7 @@ int main(void)
 	initialize();
 	
 	int steeringPart = 0;
-
+	activeSensor = 3;
 	while(1)
 	{
 		updateSensors();
@@ -117,7 +117,7 @@ int main(void)
 		if(steeringPart > 0)
 		{
 			//indicateValue(steeringPart, 1000);
-			indicateValue((int)intPart, 500);
+			indicateValue((int)diffPart, 1000);
 			
 			setRightMotorPwm(1000 - steeringPart);
 			setLeftMotorPwm(1000);
@@ -125,7 +125,7 @@ int main(void)
 		else
 		{
 			//indicateValue(-steeringPart, 1000);
-			indicateValue((int)-intPart, 500);
+			indicateValue((int)-diffPart, 1000);
 			
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringPart);
@@ -159,7 +159,7 @@ inline void computeI()
 
 inline void computeD()
 {
-	diffPart = (differentialError * kD) / dt;
+	diffPart = diffPart * (1 - dt) + (differentialError * kD) / dt;
 }
 
 
@@ -170,7 +170,6 @@ inline void computeD()
  * 2^6 - most left
  * 2^5 - second most left
  * ...
- * 2^2 - not working currently
  * 2^1 - second most right
  * 2^0 - most right
  */
@@ -213,20 +212,20 @@ void updateSensors()
 		}
 		
 		//intPart = 0; //if only central sensor is active, We want to reset integral part  
-		activeSensor = 3;
+		
 	}
 }
 
-const int lmin = 150;
-const int rmin = 130;
+const int lmin = 0;
+const int rmin = 0;
 
 //test
-const int rmax = 200;
-const int lmax = 220;
+//const int rmax = 200;
+//const int lmax = 220;
 
 //max
-//const int rmax = 280;
-//const int lmax = 300;
+const int rmax = 280;
+const int lmax = 300;
 
 const int maxSpeed = 1000;
 
