@@ -13,19 +13,18 @@ void initialize(void);
  */
 void readSensors(void);
 int  getDifference(void);
+void indicateValue(int val, int max);
+void diodesDiagnose(int d1, int d2, int d3);
 
 int k[7] = {-50, -25, -18, 0, 18, 25, 50};
 int kP = 30;
-int kD = 10;
-int kI = 20;
+int kD = 20;
+int kI = 350;
 
-// last working 16 10 15
-void diodesDiagnose(void);
+float dt = 0.0003;
 
 inline int max(int a, int b){ return a>b?a:b;}
 inline int min(int a, int b){ return a>b?b:a;}
-
-int round(float number){ return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);}
 
 /**
  * Changes the speed of the motor.
@@ -51,6 +50,10 @@ void setRightMotorPwm(int value);
  */
 int sensors = 0;
 
+
+int timer = 1000;
+int globalTimer = 0;
+
 int main(void)
 {
 	initialize();
@@ -62,22 +65,36 @@ int main(void)
 	int intPart = 0;
 	int propPart = 0;
 	int steeringPart = 0;
+	timer = 1000;
 
 	while(1)
 	{
+		if (!--timer)
+		{
+			timer = 1000;
+			
+			++globalTimer;
+			
+			if (globalTimer == 16)
+				globalTimer = 0;
+		}
+		
+		indicateValue(globalTimer, 16);
+	
 		readSensors();
-		diodesDiagnose();
+		//diodesDiagnose();
 		
 		previous_read = current_read;
 		current_read = getDifference();
 		
-		diffPart = diffPart/1.05 + (current_read - previous_read) * kD;
+		diffPart = (diffPart/1.002) + (current_read - previous_read) * kD;
+		diffPart = (diffPart<-1000)?(-1000):((diffPart>1000)?1000:diffPart);
 		
-		intPart += current_read * kI;
+		intPart += current_read * kI * dt;
 		intPart = (intPart<-1000)?(-1000):((intPart>1000)?1000:intPart);
 		
 		propPart = current_read * kP;
-		steeringPart = round(diffPart) + intPart + propPart;
+		steeringPart = (int)(diffPart) + intPart + propPart;
 		
 		if(steeringPart > 0)
 		{
@@ -158,9 +175,9 @@ void readSensors()
 // set maxes to 320 xD
 //def lmin : 210 rmin 185 lrmax 320
 static const int lmin = 170;
-static const int lmax = 260;
+static const int lmax = 280;
 static const int rmin = 130;
-static const int rmax = 255;
+static const int rmax = 300;
 static const int maxSpeed = 1000;
 
 void setLeftMotorPwm(int value)
@@ -191,23 +208,49 @@ int getDifference()
 	return toReturn;
 }
 
-void diodesDiagnose(void)
+void diodesDiagnose(int d1, int d2, int d3)
 {
-	// light the middle diode if middle sensor is above the line
-	if((sensors & (1<<3)) > 0)
-		PORTD |= 2;
-	else
-		PORTD &= ~(2);
-	// same for right sensor and bottom diode
-	if((sensors & (1<<4)) > 0)
+	//d1
+	if((sensors & (1 << (d1 - 1))) > 0)
 		PORTD |= 1;
 	else
 		PORTD &= ~(1);
-	//same for left sensor and top diode
-	if((sensors & (1<<2)) > 0)
+	
+	//d2
+	if((sensors & (1 << (d2 - 1))) > 0)
+		PORTD |= 2;
+	else
+		PORTD &= ~(2);
+		
+	//d3
+	if((sensors & (1 << (d3 - 1))) > 0)
 		PORTD |= 4;
 	else
 		PORTD &= ~(4);
+}
+
+void indicateValue(int val, int max)
+{
+	PORTD &= ~(1);
+	PORTD &= ~(2);
+	PORTD &= ~(4);
+
+	if (val <= max / 4)
+	{
+		//nothing to do
+	}
+	else if (val <= 2 * max / 4)
+	{
+		PORTD |= 1;
+	}
+	else if (val <= 3 * max / 4)
+	{
+		PORTD |= 2;
+	}
+	else
+	{
+		PORTD |= 4;
+	}
 }
 
 
