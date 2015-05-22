@@ -8,7 +8,7 @@
 //				Global variables
 /**********************************************************/
 int k[7] 					= {1000, 400, 200, 0, -200, -400, -1000};
-int intPartBoundaries[7]	= {1000, 300, 150, 0, -150, -300, -1000};
+int intPartBoundaries[7]	= {450, 350, 250, 0, -250, -350, -450};
 
 /*
 Kp = Proptional Constant.
@@ -22,7 +22,7 @@ dt = execution time of loop.
 
 float kP = 2; 
 float kD = 1;
-float kI = 1;
+float kI = 4;
 
 float err;
 float integralError;
@@ -274,7 +274,7 @@ void updateSensors()
 		activeSensor = 3;
 		isSensorDetected = 1;
 		return;
-	}
+	} 
 	
 	isSensorDetected = 0;
 	
@@ -290,8 +290,8 @@ const int rmin = 0;
 //const int lmax = 220;
 
 //max
-const int rmax = 295;
-const int lmax = 315;
+const int rmax = 380;//= 350;
+const int lmax = 400;//= 370;
 
 const int maxSpeed = 1000;
 
