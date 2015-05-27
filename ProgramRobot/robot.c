@@ -1,9 +1,6 @@
 #include<avr/io.h>
 #include<util/delay.h>
 
-//Define WHITE if the robot is supposed to follow the white line.
-//#define WHITE
-
 /**********************************************************/
 //				Global variables
 /**********************************************************/
@@ -28,7 +25,6 @@ float err;
 float integralError;
 float differentialError;
 
-//experimentaly measured 
 const float dt = 0.0003; 
 const int brakeForce = 600;
 
@@ -64,12 +60,6 @@ int isSensorDetected;
 void initialize(void);
 inline void updateSensors(void);
 inline int  getSteeringValue(void);
-
-// indicates values from choosed sensors (1-7) 
-// di : i-diode
-void diodesDiagnose(int d1, int d2, int d3);
-void binaryOutput(int val);
-void indicateValue(int val, int max);
 
 inline void computeP(void); 
 inline void computeI(void);
@@ -270,51 +260,6 @@ int getSteeringValue()
 	return k[activeSensor];
 }
 
-void diodesDiagnose(int d1, int d2, int d3)
-{
-	//d1
-	if((sensors & (1 << (d1 - 1))) > 0)
-		PORTD |= 1;
-	else
-		PORTD &= ~(1);
-	
-	//d2
-	if((sensors & (1 << (d2 - 1))) > 0)
-		PORTD |= 2;
-	else
-		PORTD &= ~(2);
-		
-	//d3
-	if((sensors & (1 << (d3 - 1))) > 0)
-		PORTD |= 4;
-	else
-		PORTD &= ~(4);
-}
-
-void indicateValue(int val, int max)
-{
-	PORTD &= ~(1);
-	PORTD &= ~(2);
-	PORTD &= ~(4);
-
-	if (val <= max / 4)
-	{
-		//nothing to do
-	}
-	else if (val <= 2 * max / 4)
-	{
-		PORTD |= 1;
-	}
-	else if (val <= 3 * max / 4)
-	{
-		PORTD |= 2;
-	}
-	else
-	{
-		PORTD |= 4;
-	}
-}
-
 void initialize()
 {
 	// Enable output pins
@@ -352,12 +297,3 @@ void initialize()
 	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
 }
 
-void binaryOutput(int val)
-{
-	PORTD &= ~(1);
-	PORTD &= ~(2);
-	PORTD &= ~(4);
-	if(val & 4) PORTD |= 4;
-	if(val & 2) PORTD |= 2;
-	if(val & 1) PORTD |= 1;
-}
