@@ -38,14 +38,7 @@ int propPart = 0;
 
 int current_read = 0;
 int previous_read = 0;
-void binaryOutput(int val){
-	PORTD &= ~(1);
-	PORTD &= ~(2);
-	PORTD &= ~(4);
-	if(val & 4) PORTD |= 4;
-	if(val & 2) PORTD |= 2;
-	if(val & 1) PORTD |= 1;
-}
+
 
 /**
  * Global variable for storing the binary input from sensors.
@@ -53,9 +46,6 @@ void binaryOutput(int val){
  * 2^7 = none
  * 2^6 = most left sensor
  * 2^5 = second most left
- * ...
- * 2^2 currently not working
- * ...
  * 2^0 = most right
  *
  * bit = 1 -> Sensor is above the line
@@ -78,7 +68,7 @@ inline int  getSteeringValue(void);
 // indicates values from choosed sensors (1-7) 
 // di : i-diode
 void diodesDiagnose(int d1, int d2, int d3);
-
+void binaryOutput(int val);
 void indicateValue(int val, int max);
 
 inline void computeP(void); 
@@ -110,12 +100,6 @@ int main(void)
 	{
 		updateSensors();
 		
-		//diodesDiagnose(7,4,1);
-		//binaryOutput(lastKnownNonCenterSensor);
-		//binaryOutput(!isSensorDetected);
-		
-		
-		
 		current_read = getSteeringValue();
 		differentialError = current_read - previous_read;
 		
@@ -132,9 +116,6 @@ int main(void)
 		
 		if(!isSensorDetected && lastKnownNonCenterSensor != 3)
 		{
-			steeringValue = -250 ;
-		
-		
 			if (lastKnownNonCenterSensor > 3)
 			{
 				intPart = diffPart - 0;
@@ -155,8 +136,6 @@ int main(void)
 		}
 		else if(steeringValue > 0)
 		{
-			//indicateValue(steeringValue, 1000);
-			//indicateValue((int)diffPart, 1000);
 			PORTD |= (1 << 4); //DIR A1
 			PORTD &= ~(1 << 5); //DIR A2	
 			PORTD |= (1 << 6); //DIR B1
@@ -166,8 +145,6 @@ int main(void)
 		}
 		else
 		{
-			//indicateValue(-steeringValue, 1000);
-			//indicateValue((int)-diffPart, 1000);
 			PORTD |= (1 << 4); //DIR A1
 			PORTD &= ~(1 << 5); //DIR A2	
 			PORTD |= (1 << 6); //DIR B1
@@ -175,15 +152,6 @@ int main(void)
 			setRightMotorPwm(1000);
 			setLeftMotorPwm(1000 + steeringValue);
 		}	
-		
-		if ( steeringValue < 0)
-		{
-			indicateValue(-steeringValue + 250,1000);
-		}
-		else
-		{
-			indicateValue(steeringValue + 250,1000);
-		}
 		
 		previous_read = current_read;
 	}
@@ -277,21 +245,13 @@ void updateSensors()
 	} 
 	
 	isSensorDetected = 0;
-	
-	
-	//intPart = 0; //if only central sensor is active, We want to reset integral part  
 }
 
 const int lmin = 0;
 const int rmin = 0;
 
-//test
-//const int rmax = 200;
-//const int lmax = 220;
-
-//max
-const int rmax = 380;//= 350;
-const int lmax = 400;//= 370;
+const int rmax = 380;
+const int lmax = 400;
 
 const int maxSpeed = 1000;
 
@@ -368,7 +328,6 @@ void initialize()
 	DDRD |= (1 << 1); //Diode 1
 	DDRD |= (1 << 2); //Diode 2
 
-
 	//Enable input pins
 	DDRC &= ~(1 << 0); //C1
 	DDRC &= ~(1 << 1); //C2
@@ -385,7 +344,6 @@ void initialize()
 	PORTD &= ~(1 << 7); //DIR B2
 
 	//PWM settings
-
 	ICR1  = 400;
 	//OCR1A = 300;
 	//OCR1B = 300;
@@ -394,3 +352,12 @@ void initialize()
 	TCCR1B = (1 << WGM13) | (1 << WGM12) | (1 << CS10);
 }
 
+void binaryOutput(int val)
+{
+	PORTD &= ~(1);
+	PORTD &= ~(2);
+	PORTD &= ~(4);
+	if(val & 4) PORTD |= 4;
+	if(val & 2) PORTD |= 2;
+	if(val & 1) PORTD |= 1;
+}
